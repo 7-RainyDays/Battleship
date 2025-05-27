@@ -49,3 +49,17 @@ test('Ship has been placed horizontally', () => {
     expect(gameboard.board[4][6]).toEqual('s')
 });
 
+test('Input is valid', () => {
+    const input = 'A2-A5';
+    const gameboard = new Gameboard();
+    expect(gameboard.validateInput(input)).toBeTruthy();
+})
+
+/*hier weiter machen */
+test('Input is invalid', () => {
+    const input = ['A21', 'W4', '44', 'A2-A10', 'B1-C2']
+    const gameboard = new Gameboard();
+    input.forEach((x) => {
+        expect(gameboard.validateInput(x)).toBeFalsy();
+    })
+})
