@@ -1,5 +1,6 @@
 export class Ship {
     constructor(len) {
+
         this.len = len;
         this.hitCount = 0;
         this.sunk = false;
@@ -32,7 +33,16 @@ export class Gameboard {
         this.ships = [];
     };
 
+    transCoordinates(str) {
+        //translates the input string to match the gameboard index format
+        const al = 'ABCDEFGHIJ';
+        const x = al.indexOf(str.charAt(0).toUpperCase());
+        const y = parseInt(str.slice(1)) - 1;
+        return [x, y];
+    }
+
     validateInput(str) {
+        //checks the input string can be placed on the gameboard
         const single = /^[A-J](10|[1-9])$/;
         const range = /^[A-J](10|[1-9])-[A-J](10|[1-9])$/;
 
@@ -54,11 +64,37 @@ export class Gameboard {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
     };
 
-    transCoordinates(str) {
-        const al = 'ABCDEFGHIJ';
-        const x = al.indexOf(str.charAt(0).toUpperCase());
-        const y = parseInt(str.slice(1)) - 1;
-        return [x, y];
+    getPlacementCoordinates(str) {
+        //returns all coordinates for a ship placement in a 2-Dimensional Array e.g. [[0,1],[0,2],[0,3]]
+        const [from, to] = str.split("-");
+        const [x1, y1] = this.transCoordinates(from);
+        const [x2, y2] = this.transCoordinates(to);
+
+        if (x1 === x2) {
+            const affectedCoordinates = this.getAllAffectedCoordinates(y1, y2);
+            const arr = affectedCoordinates.map(z => [x1, z]);
+            return arr;
+        } else if (y1 === y2) {
+            const affectedCoordinates = this.getAllAffectedCoordinates(x1, x2);
+            const arr = affectedCoordinates.map(z => [z, y1]);
+            return arr;
+        } else {
+            return [x1, y1];
+        }
+    }
+
+    getAllAffectedCoordinates(start, end) {
+        //returns the range of the coordinates as an array
+        const min = Math.min(start, end);
+        const max = Math.max(start, end);
+        return Array.from({ length: max - min + 1 }, (_, i) => min + i);
+    }
+
+    getAllSurroundindCoordinates(arr) {
+        for (const coordinate in arr) {
+            //hier weiter machen
+            return;
+        }
     }
 
     placeShip(str) {
@@ -79,8 +115,8 @@ export class Gameboard {
             for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 this.board[x1][y] = 's';
                 const newShip = new Ship(Math.abs(y1, y2) + 1);
-                this.ships.push(newShip);
             };
+            this.ships.push(newShip);
         } else if (y1 === y2) {
             //vertical ship
             for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
