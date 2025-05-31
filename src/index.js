@@ -90,12 +90,42 @@ export class Gameboard {
         return Array.from({ length: max - min + 1 }, (_, i) => min + i);
     }
 
-    getAllSurroundindCoordinates(arr) {
-        for (const coordinate in arr) {
-            //hier weiter machen
-            return;
+    getAllSurroundingCoordinates(coords) {
+        const surrounding = []
+        const offsets = [
+            [-1, -1], [-1, 0], [-1, 1],
+            [0, -1], [0, 1],
+            [1, -1], [1, 0], [1, 1]
+        ];
+        for (const [x, y] of coords) {
+            for (const [dx, dy] of offsets) {
+                const nx = x + dx;
+                const ny = y + dx;
+                const key = `${nx},${ny}`;
+                if (this.isWithinBoard([nx, ny])) {
+                    surrounding.push([nx, ny]);
+                }
+            };
+        };
+        const unique = [];
+        const seen = new Set();
+
+        for (const coord of surrounding) {
+            const key = coord.toString();
+            if (!seen.has(key)) {
+                seen.add(key);
+                unique.push(coord);
+            }
         }
+
+        return unique;
     }
+
+
+    isWithinBoard([x, y]) {
+        return x >= 0 && x < 10 && y >= 0 && y < 10;
+    }
+
 
     placeShip(str) {
         //check if ship has length 1
@@ -112,17 +142,17 @@ export class Gameboard {
 
         if (x1 === x2) {
             //horizontal ship
+            const newShip = new Ship(Math.abs(y1, y2) + 1);
+            this.ships.push(newShip);
             for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 this.board[x1][y] = 's';
-                const newShip = new Ship(Math.abs(y1, y2) + 1);
             };
-            this.ships.push(newShip);
         } else if (y1 === y2) {
             //vertical ship
+            const newShip = new Ship(Math.abs((x1 - x2) + 1));
+            this.ships.push(newShip);
             for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
                 this.board[x][y1] = 's';
-                const newShip = new Ship(Math.abs((x1 - x2) + 1));
-                this.ships.push(newShip);
             };
         } else {
             throw new Error("Nur horizontale oder vertikale Platzierungen erlaubt.");
