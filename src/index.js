@@ -34,11 +34,34 @@ export class Gameboard {
     };
 
     transCoordinates(str) {
-        //translates the input string to match the gameboard index format
+        //translates the input string to match the gameboard index format;
         const al = 'ABCDEFGHIJ';
         const x = al.indexOf(str.charAt(0).toUpperCase());
         const y = parseInt(str.slice(1)) - 1;
         return [x, y];
+    }
+
+    tryPlaceShip(str) {
+        //driver script to place a ship
+        if (!this.validateInput(str)) return false;
+
+        const coords = this.getPlacementCoordinates(str);
+        if (!this.areCoordsFree(coords)) return false;
+
+        const surrounding = this.getAllSurroundingCoordinates(coords);
+        if (!this.areCoordsFree(surrounding)) return false;
+
+        this.placeShipOnBoard(str);
+        return true;
+    }
+
+    areCoordsFree(coords) {
+        for (const [x, y] of coords) {
+            if (this.board[x][y] === 's') {
+                return false;
+            }
+        }
+        return true;
     }
 
     validateInput(str) {
@@ -66,20 +89,24 @@ export class Gameboard {
 
     getPlacementCoordinates(str) {
         //returns all coordinates for a ship placement in a 2-Dimensional Array e.g. [[0,1],[0,2],[0,3]]
+        // Single cell, e.g. "C10"
+        if (!str.includes("-")) {
+            const [x, y] = this.transCoordinates(str);
+            return [[x, y]];
+        }
+        // Range input, e.g. "C5-C8"
         const [from, to] = str.split("-");
         const [x1, y1] = this.transCoordinates(from);
         const [x2, y2] = this.transCoordinates(to);
 
         if (x1 === x2) {
             const affectedCoordinates = this.getAllAffectedCoordinates(y1, y2);
-            const arr = affectedCoordinates.map(z => [x1, z]);
-            return arr;
+            return affectedCoordinates.map(z => [x1, z]);
         } else if (y1 === y2) {
             const affectedCoordinates = this.getAllAffectedCoordinates(x1, x2);
-            const arr = affectedCoordinates.map(z => [z, y1]);
-            return arr;
+            return affectedCoordinates.map(z => [z, y1]);
         } else {
-            return [x1, y1];
+            throw new Error("Nur horizontale oder vertikale Platzierungen erlaubt.");
         }
     }
 
@@ -127,7 +154,7 @@ export class Gameboard {
     }
 
 
-    placeShip(str) {
+    placeShipOnBoard(str) {
         //check if ship has length 1
         if (str.split("-").length === 1) {
             const [x, y] = this.transCoordinates(str);

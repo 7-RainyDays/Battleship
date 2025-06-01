@@ -31,19 +31,19 @@ test('Gameboard translates inserted coordinates to numeric values', () => {
 
 test('Ship of length 1 has been placed on given coordinates', () => {
     const gameboard = new Gameboard();
-    gameboard.placeShip(('C10'));
+    gameboard.tryPlaceShip('C10');
     expect(gameboard.board[2][9]).toBe("s");
 });
 
 test('Ship has been placed verically', () => {
     const gameboard = new Gameboard();
-    gameboard.placeShip(('C7-C10'));
+    gameboard.tryPlaceShip(('C7-C10'));
     expect(gameboard.board[2].slice(6, 9)).toEqual(['s', 's', 's'])
 });
 
 test('Ship has been placed horizontally', () => {
     const gameboard = new Gameboard();
-    gameboard.placeShip(('C7-E7'));
+    gameboard.tryPlaceShip(('C7-E7'));
     expect(gameboard.board[2][6]).toEqual('s')
     expect(gameboard.board[3][6]).toEqual('s')
     expect(gameboard.board[4][6]).toEqual('s')
@@ -65,6 +65,6 @@ test('Input is invalid', () => {
 
 test('Bordering another Ship means invalid Input', () => {
     const gameboard = new Gameboard();
-    gameboard.placeShip('A1-A3');
-    expect(gameboard.placeShip('B1-B3')).toBeFalsy();
+    gameboard.tryPlaceShip('A1-A3');
+    expect(gameboard.tryPlaceShip('B1-B3')).toBeFalsy();
 })
