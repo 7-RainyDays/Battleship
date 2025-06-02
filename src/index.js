@@ -8,6 +8,7 @@ export class Ship {
 
     hit() {
         this.hitCount += 1;
+        this.isSunk();
     };
 
     isSunk() {
@@ -30,7 +31,7 @@ export class Gameboard {
             ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
             ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
         ];
-        this.ships = [];
+        this.coordToShip = new Map();
     };
 
     transCoordinates(str) {
@@ -52,7 +53,16 @@ export class Gameboard {
         if (!this.areCoordsFree(surrounding)) return false;
 
         this.placeShipOnBoard(str);
+        this.addToShipMap(coords);
         return true;
+    }
+
+    addToShipMap(coords) {
+        const len = coords.length;
+        const ship = new Ship(len);
+        for (const [x, y] of coords) {
+            this.coordToShip.set(`${x},${y}`, ship);
+        }
     }
 
     areCoordsFree(coords) {
@@ -159,7 +169,6 @@ export class Gameboard {
         if (str.split("-").length === 1) {
             const [x, y] = this.transCoordinates(str);
             this.board[x][y] = 's';
-            this.ships.push(new Ship(1));
             return;
         };
 
@@ -169,15 +178,11 @@ export class Gameboard {
 
         if (x1 === x2) {
             //horizontal ship
-            const newShip = new Ship(Math.abs(y1, y2) + 1);
-            this.ships.push(newShip);
             for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 this.board[x1][y] = 's';
             };
         } else if (y1 === y2) {
             //vertical ship
-            const newShip = new Ship(Math.abs((x1 - x2) + 1));
-            this.ships.push(newShip);
             for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
                 this.board[x][y1] = 's';
             };
@@ -199,7 +204,13 @@ export class Gameboard {
             return 'repeat';
         } else if (attackedPos === 's') {
             this.board[x][y] = 'o';
+            this.receiveShipHit(x, y);
             return 'hit';
         };
+    };
+
+    receiveShipHit(x, y) {
+        const ship = this.coordToShip.get(`${x},${y}`);
+        ship.hit();
     };
 };
