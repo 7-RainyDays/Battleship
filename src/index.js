@@ -185,4 +185,21 @@ export class Gameboard {
             throw new Error("Nur horizontale oder vertikale Platzierungen erlaubt.");
         };
     };
+
+    receiveAttack(coords) {
+        if (!this.validateInput(coords)) {
+            throw new Error('Invalid coordinates.');
+        }
+        const [x, y] = this.transCoordinates(coords);
+        const attackedPos = this.board[x][y];
+        if (attackedPos === '-') {
+            this.board[x][y] = 'x';
+            return 'miss';
+        } else if (attackedPos === 'x' || attackedPos === 'o') {
+            return 'repeat';
+        } else if (attackedPos === 's') {
+            this.board[x][y] = 'o';
+            return 'hit';
+        };
+    };
 };
