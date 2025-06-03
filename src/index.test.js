@@ -82,3 +82,17 @@ test('hitting a ship on the board ', () => {
     gameboard.receiveAttack('A2');
     expect(gameboard.board[0][1]).toBe('o');
 });
+
+test('game is over', () => {
+    const gameboard = new Gameboard();
+    gameboard.tryPlaceShip('A2');
+    gameboard.receiveAttack('A2');
+    expect(gameboard.isGameOver()).toBeTruthy();
+})
+
+test('game is not over', () => {
+    const gameboard = new Gameboard();
+    gameboard.tryPlaceShip('A1-A2');
+    gameboard.receiveAttack('A2');
+    expect(gameboard.isGameOver()).toBeFalsy();
+})

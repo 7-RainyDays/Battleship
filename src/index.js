@@ -213,4 +213,14 @@ export class Gameboard {
         const ship = this.coordToShip.get(`${x},${y}`);
         ship.hit();
     };
-};
+
+    isGameOver() {
+        const uniqueShips = new Set(this.coordToShip.values());
+        for (const ship of uniqueShips) {
+            if (!ship.isSunk()) {
+                return false;
+            };
+        };
+        return true;
+    };
+}
