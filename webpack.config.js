@@ -17,7 +17,7 @@ module.exports = {
             directory: path.join(__dirname, 'public'),
         },
         watchFiles: {
-            paths: ['src/index.html', 'src/index.js', 'src/style.css'],
+            paths: ['src/index.html', 'src/index.js', 'src/index.css'],
             options: {
                 usePolling: false,
             },
@@ -25,6 +25,7 @@ module.exports = {
         compress: true,
         port: 9000,
     },
+
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/template.html",
@@ -33,11 +34,12 @@ module.exports = {
             inject: 'body'
         }),
     ],
+
     module: {
         rules: [
             {
                 test: /\.css$/i,
-                use: ["style-loader", "css-loader"],
+                use: ["style-loader", "css-loader", "postcss-loader"], // ✅ PostCSS hier eingebunden
             },
             {
                 test: /\.html$/i,
