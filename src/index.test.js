@@ -1,4 +1,4 @@
-import { Ship, Gameboard } from './index';
+import { Ship, Gameboard, Player } from './classes';
 
 test('test ship', () => {
     const ship = new Ship(3);

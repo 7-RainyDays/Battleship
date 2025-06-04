@@ -1,0 +1,64 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+h3 {
+    margin: 30px;
+    text-align: center;
+}
+
+.gameboard-container {
+    display: flex;
+    justify-content: center;
+    gap: 6.25rem;
+}
+
+table {
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 8px;
+}
+
+td {
+    height: 40px;
+    width: 40px;
+    border: 1px grey solid;
+    box-sizing: border-box;
+    font-size: 0;
+    line-height: 0;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    gap: 4rem;
+}
+
+button {
+    height: 40px;
+    width: 80px;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+.ship {
+    background-color: blue;
+}

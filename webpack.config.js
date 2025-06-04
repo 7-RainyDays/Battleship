@@ -17,7 +17,7 @@ module.exports = {
             directory: path.join(__dirname, 'public'),
         },
         watchFiles: {
-            paths: ['src/index.html', 'src/index.js', 'src/index.css'],
+            paths: ['src/index.html', 'src/index.js', 'src/classes.js', 'src/domAction.js', 'src/style.css'],
             options: {
                 usePolling: false,
             },
@@ -39,7 +39,7 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use: ["style-loader", "css-loader", "postcss-loader"], // ✅ PostCSS hier eingebunden
+                use: ["style-loader", "css-loader"],
             },
             {
                 test: /\.html$/i,
