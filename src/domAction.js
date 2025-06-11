@@ -1,5 +1,4 @@
-const domHandler = () => {
-
+const domHandler = (player, computer) => {
 
     const startBtn = document.querySelector('.start-game');
     startBtn.addEventListener('click', () => alert('game has started'));
@@ -21,7 +20,7 @@ const domHandler = () => {
                 cell.dataset.y = y;
             });
         });
-    }
+    };
 
     annotateBoardCells('.player-board');
     annotateBoardCells('.computer-board');
@@ -32,10 +31,12 @@ const domHandler = () => {
         const x = cell.dataset.x;
         const y = cell.dataset.y;
         console.log(computer.board.receiveAttack2(x, y));
-        updateGameboard(computer.board.board, "computer", false);
+        updateGameboard(computer, false);
     });
 
-    const updateGameboard = (board, boardType, visible = true) => {
+    const updateGameboard = (person, visible = true) => {
+        const board = person.board.board;
+        const boardType = person.name;
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
                 const cellValue = board[i][j]

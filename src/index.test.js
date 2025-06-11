@@ -1,28 +1,31 @@
-import { Ship, Gameboard } from './classes';
+import { Ship, Gameboard, computerPlayer, Computer } from './classes';
 import { domHandler } from './domAction';
 
-//testing under the hood
-test('test ship', () => {
-    const ship = new Ship(3);
-    expect(ship.len).toBe(3);
-});
+describe('ship interaction', () => {
+    let ship;
 
-test('test ship sunk', () => {
-    const ship = new Ship(3);
-    expect(ship.sunk).toBeFalsy();
-});
+    beforeEach(() => {
+        ship = new Ship(3);
+    });
+    test('test ship', () => {
+        expect(ship.len).toBe(3);
+    });
 
-test('Ship gets hit', () => {
-    const ship = new Ship(2);
-    ship.hit();
-    expect(ship.hitCount).toBe(1);
-});
+    test('test ship sunk', () => {
+        expect(ship.sunk).toBeFalsy();
+    });
 
-test('Ship sinks after enough hits', () => {
-    const ship = new Ship(2);
-    ship.hit();
-    ship.hit();
-    expect(ship.isSunk()).toBe(true);
+    test('Ship gets hit', () => {
+        ship.hit();
+        expect(ship.hitCount).toBe(1);
+    });
+
+    test('Ship sinks after enough hits', () => {
+        ship.hit();
+        ship.hit();
+        ship.hit();
+        expect(ship.isSunk()).toBeTruthy;
+    });
 });
 
 test('Gameboard translates inserted coordinates to numeric values', () => {
@@ -99,4 +102,39 @@ test('game is not over', () => {
     expect(gameboard.isGameOver()).toBeFalsy();
 })
 
-//DOM interactions
+describe('computerPlayer', () => {
+    let computer;
+
+    beforeEach(() => {
+        computer = new Computer();
+    });
+
+    test('initializes with 100 available moves', () => {
+        expect(computer.availableMoves.length).toBe(100);
+        expect(computer.availableMoves).toContain('0,0');
+        expect(computer.availableMoves).toContain('9,9');
+    });
+
+    test('getRandomCoords returns a coordinate and updates arrays correctly', () => {
+        const initialLength = computer.availableMoves.length;
+        const coord = computer.getRandomCoords();
+
+        expect(Array.isArray(coord)).toBe(true);
+        expect(coord.length).toBe(2);
+        expect(typeof coord[0]).toBe('number');
+
+        const coordStr = coord.join(',');
+        expect(computer.attackedCoords).toContain(coordStr);
+        expect(computer.availableMoves).not.toContain(coordStr);
+        expect(computer.availableMoves.length).toBe(initialLength - 1);
+    });
+
+    test('getRandomCoords returns null when no moves are left', () => {
+        // Leer alle Züge
+        for (let i = 0; i < 100; i++) {
+            computer.getRandomCoords();
+        }
+        expect(computer.availableMoves.length).toBe(0);
+        expect(computer.getRandomCoords()).toBe(null);
+    });
+});
