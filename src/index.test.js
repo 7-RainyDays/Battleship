@@ -1,5 +1,7 @@
-import { Ship, Gameboard, Player } from './classes';
+import { Ship, Gameboard } from './classes';
+import { domHandler } from './domAction';
 
+//testing under the hood
 test('test ship', () => {
     const ship = new Ship(3);
     expect(ship.len).toBe(3);
@@ -96,3 +98,5 @@ test('game is not over', () => {
     gameboard.receiveAttack('A2');
     expect(gameboard.isGameOver()).toBeFalsy();
 })
+
+//DOM interactions

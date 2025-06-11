@@ -32,6 +32,11 @@ export class Gameboard {
             ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
         ];
         this.coordToShip = new Map();
+        this.CELL_TYPES = {
+            SHIP: 's',
+            HIT: 'o',
+            MISS: 'x',
+        };
     };
 
     transCoordinates(str) {
@@ -67,7 +72,7 @@ export class Gameboard {
 
     areCoordsFree(coords) {
         for (const [x, y] of coords) {
-            if (this.board[x][y] === 's') {
+            if (this.board[x][y] === this.CELL_TYPES.SHIP) {
                 return false;
             }
         }
@@ -168,7 +173,7 @@ export class Gameboard {
         //check if ship has length 1
         if (str.split("-").length === 1) {
             const [x, y] = this.transCoordinates(str);
-            this.board[x][y] = 's';
+            this.board[x][y] = this.CELL_TYPES.SHIP;
             return;
         };
 
@@ -179,12 +184,12 @@ export class Gameboard {
         if (x1 === x2) {
             //horizontal ship
             for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-                this.board[x1][y] = 's';
+                this.board[x1][y] = this.CELL_TYPES.SHIP;
             };
         } else if (y1 === y2) {
             //vertical ship
             for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-                this.board[x][y1] = 's';
+                this.board[x][y1] = this.CELL_TYPES.SHIP;
             };
         } else {
             throw new Error("Nur horizontale oder vertikale Platzierungen erlaubt.");
@@ -198,16 +203,30 @@ export class Gameboard {
         const [x, y] = this.transCoordinates(coords);
         const attackedPos = this.board[x][y];
         if (attackedPos === '-') {
-            this.board[x][y] = 'x';
+            this.board[x][y] = this.CELL_TYPES.MISS;
             return 'miss';
-        } else if (attackedPos === 'x' || attackedPos === 'o') {
+        } else if (attackedPos === this.CELL_TYPES.MISS || attackedPos === this.CELL_TYPES.HIT) {
             return 'repeat';
-        } else if (attackedPos === 's') {
-            this.board[x][y] = 'o';
+        } else if (attackedPos === this.CELL_TYPES.SHIP) {
+            this.board[x][y] = this.CELL_TYPES.HIT;
             this.receiveShipHit(x, y);
             return 'hit';
         };
     };
+
+    receiveAttack2(x, y) {
+        const attackedPos = this.board[x][y];
+        if (attackedPos === '-') {
+            this.board[x][y] = this.CELL_TYPES.MISS;
+            return 'miss';
+        } else if (attackedPos === this.CELL_TYPES.MISS || attackedPos === this.CELL_TYPES.HIT) {
+            return 'repeat';
+        } else if (attackedPos === this.CELL_TYPES.SHIP) {
+            this.board[x][y] = this.CELL_TYPES.HIT;
+            this.receiveShipHit(x, y);
+            return 'hit';
+        };
+    }
 
     receiveShipHit(x, y) {
         const ship = this.coordToShip.get(`${x},${y}`);

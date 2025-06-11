@@ -62,3 +62,17 @@ button:hover {
 .ship {
     background-color: blue;
 }
+
+.hiddenShip {
+    background-color: transparent;
+}
+
+.water {
+    background-color: yellow;
+    border-collapse: collapse;
+}
+
+.hit {
+    background-color: red;
+    border-collapse: collapse;
+}
