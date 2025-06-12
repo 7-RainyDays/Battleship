@@ -1,7 +1,7 @@
 const domHandler = (player, computer) => {
 
     const startBtn = document.querySelector('.start-game');
-    startBtn.addEventListener('click', () => alert('game has started'));
+    startBtn.addEventListener('click', () => playTurn());
 
     const resetBtn = document.querySelector('.reset-game');
     resetBtn.addEventListener('click', () => alert('game reseted'));
@@ -49,10 +49,11 @@ const domHandler = (player, computer) => {
                     selectedCell.classList.add('hit');
                 } else if (cellValue === 'x') {
                     selectedCell.classList.add('water');
-                };
-            };
-        };
+                }
+            }
+        }
     };
+
 
     return { updateGameboard };
 }
