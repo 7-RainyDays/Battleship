@@ -76,7 +76,7 @@ test('Bordering another Ship means invalid Input', () => {
 
 test('hitting an empty field places a hit marker on the board', () => {
     const gameboard = new Gameboard();
-    gameboard.receiveAttack(0, 0);
+    gameboard.receiveAttack('A1');
     expect(gameboard.board[0][0]).toBe('x');
 
 });

@@ -1,15 +1,15 @@
 import './style.css';
 import { Player, Computer } from './classes.js';
 import domHandler from './domAction.js';
-import GameController from './gameController.js';
 
 //Bug-shiff kann nicht diagonal angrenzen
+//brauche type in der Player klasse nicht mehr
 
-const gameStarted = false;
+const gameStarted = true;
 const player = new Player();
 const computer = new Computer();
 const dom = domHandler(player, computer);
-const gameState = new GameController(player, computer, dom);
+
 
 const playerShips = [
     'A1-A2',
@@ -41,6 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const ship of computerShips) {
         computer.board.tryPlaceShip(ship);
     }
+
+    console.log("Player im DOM:", computer);
+    console.log("Board des Players:", computer.board);
+    console.log("Board intern:", computer.board.board);
     dom.updateGameboard(player, true);
+
     dom.updateGameboard(computer, false);
 });

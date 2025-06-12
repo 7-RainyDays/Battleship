@@ -36,7 +36,6 @@ export class Gameboard {
             SHIP: 's',
             HIT: 'o',
             MISS: 'x',
-            WATER: '-'
         };
     };
 
@@ -197,7 +196,25 @@ export class Gameboard {
         };
     };
 
-    receiveAttack(x, y) {
+    receiveAttack(coords) {
+        if (!this.validateInput(coords)) {
+            throw new Error('Invalid coordinates.');
+        }
+        const [x, y] = this.transCoordinates(coords);
+        const attackedPos = this.board[x][y];
+        if (attackedPos === '-') {
+            this.board[x][y] = this.CELL_TYPES.MISS;
+            return 'miss';
+        } else if (attackedPos === this.CELL_TYPES.MISS || attackedPos === this.CELL_TYPES.HIT) {
+            return 'repeat';
+        } else if (attackedPos === this.CELL_TYPES.SHIP) {
+            this.board[x][y] = this.CELL_TYPES.HIT;
+            this.receiveShipHit(x, y);
+            return 'hit';
+        };
+    };
+
+    receiveAttack2(x, y) {
         const attackedPos = this.board[x][y];
         if (attackedPos === '-') {
             this.board[x][y] = this.CELL_TYPES.MISS;
@@ -211,21 +228,12 @@ export class Gameboard {
         };
     }
 
-    noAttackYet(x, y) {
-        const cell = this.board[x][y]
-        console.log(cell)
-        return (
-            cell !== this.CELL_TYPES.HIT &&
-            cell !== this.CELL_TYPES.MISS
-        );
-    }
-
     receiveShipHit(x, y) {
         const ship = this.coordToShip.get(`${x},${y}`);
         ship.hit();
     };
 
-    allShipsSunk() {
+    isGameOver() {
         const uniqueShips = new Set(this.coordToShip.values());
         for (const ship of uniqueShips) {
             if (!ship.isSunk()) {
@@ -269,9 +277,8 @@ export class Computer extends Player {
         return item.split(',').map(Number);
     }
 
-    randomAttack(player) {
-        const [x, y] = this.getRandomCoords();
-        console.log(x, y);
-        player.board.receiveAttack(x, y);
+    randomAttack() {
+        const [x, y] = this.getRandomCoords;
+
     }
 }
