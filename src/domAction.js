@@ -1,7 +1,7 @@
 const domHandler = (player, computer) => {
 
     const startBtn = document.querySelector('.start-game');
-    startBtn.addEventListener('click', () => alert('game has started'));
+    startBtn.addEventListener('click', () => playTurn());
 
     const resetBtn = document.querySelector('.reset-game');
     resetBtn.addEventListener('click', () => alert('game reseted'));
@@ -25,26 +25,21 @@ const domHandler = (player, computer) => {
     annotateBoardCells('.player-board');
     annotateBoardCells('.computer-board');
 
-    computerBoard.addEventListener('click', function (e) {
-        const cell = e.target.closest('td');
-        if (!cell) return;
-        const x = cell.dataset.x;
-        const y = cell.dataset.y;
-        console.log(computer.board.receiveAttack2(x, y));
-        updateGameboard(computer, false);
-    });
-
     const updateGameboard = (person, visible = true) => {
         const board = person.board.board;
         const boardType = person.name;
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 10; j++) {
-                const cellValue = board[i][j]
+
+        for (let y = 0; y < 10; y++) { // y = Zeile
+            for (let x = 0; x < 10; x++) { // x = Spalte
+                const cellValue = board[y][x]; // korrekt: [zeile][spalte]
+
                 const selectedCell = document.querySelector(
-                    `.${boardType}-board tbody tr:nth-child(${j + 1}) td:nth-child(${i + 2})`
+                    `.${boardType}-board tbody tr:nth-child(${y + 1}) td:nth-child(${x + 2})`
                 );
+
+                if (!selectedCell) continue;
+
                 if (cellValue === 's') {
-                    if (!selectedCell) console.log("fail");
                     if (visible) {
                         selectedCell.classList.add('ship');
                     } else {
@@ -54,10 +49,11 @@ const domHandler = (player, computer) => {
                     selectedCell.classList.add('hit');
                 } else if (cellValue === 'x') {
                     selectedCell.classList.add('water');
-                };
-            };
-        };
+                }
+            }
+        }
     };
+
 
     return { updateGameboard };
 }
