@@ -1,3 +1,5 @@
+import { transCoordinates, validateInput } from "./utils";
+
 export class Ship {
     constructor(len) {
 
@@ -38,14 +40,45 @@ export class Gameboard {
             MISS: 'x',
             WATER: '-'
         };
+        this.availableShips = {
+            "one": 4,
+            "two": 3,
+            "three": 2,
+            "four": 1
+        };
+        this.playerShips = [
+            'A1-A2',
+            'B6-B9',
+            'C5',
+            'G1-G4',
+            'D10-E10',
+            'J10',
+            'E8-G8',
+            'J1-J4',
+        ];
     };
 
-    transCoordinates(str) {
-        //translates the input string to match the gameboard index format;
-        const al = 'ABCDEFGHIJ';
-        const x = al.indexOf(str.charAt(0).toUpperCase());
-        const y = parseInt(str.slice(1)) - 1;
-        return [x, y];
+    //create random coordinates for ships on the board
+    createRandomShipPlacement() {
+        for (const [key, value] of Object.entries(this.availableShips)) {
+            const startX = getRandomInt(10);
+            const startY = getRandomInt(10);
+            if (value === 1) {
+                this.availableShips.push([startX, startY]);
+                continue;
+            };
+            //create vertical or horizontal placed ship 
+            const coinFlip = Math.floor(Math.random() * 2);
+            if (coinFlip === 0) {
+                const rangeX = this.createShipRange(startX, value);
+            } else {
+                const rangeY = this.createShipRange(startY, value);
+            }
+        }
+    }
+
+    createShipRange() {
+        return;
     }
 
     tryPlaceShip(str) {
@@ -80,28 +113,6 @@ export class Gameboard {
         return true;
     }
 
-    validateInput(str) {
-        //checks the input string can be placed on the gameboard
-        const single = /^[A-J](10|[1-9])$/;
-        const range = /^[A-J](10|[1-9])-[A-J](10|[1-9])$/;
-
-        if (!(single.test(str) || range.test(str))) return false;
-
-        if (range.test(str)) {
-            const [from, to] = str.split("-");
-            const [x1, y1] = this.transCoordinates(from);
-            const [x2, y2] = this.transCoordinates(to);
-
-            const isStraight = x1 === x2 || y1 === y2;
-            const inBounds = [x1, x2, y1, y2].every((val) => val >= 0 && val < 10);
-            const maxLength = Math.abs(x1 - x2) <= 5 && Math.abs(y1 - y2) <= 5;
-            return isStraight && inBounds && maxLength;
-        }
-
-        // single field
-        const [x, y] = this.transCoordinates(str);
-        return x >= 0 && x < 10 && y >= 0 && y < 10;
-    };
 
     getPlacementCoordinates(str) {
         //returns all coordinates for a ship placement in a 2-Dimensional Array e.g. [[0,1],[0,2],[0,3]]
@@ -243,12 +254,15 @@ export class Gameboard {
         this.board = this.createEmptyBoard();
         this.coordToShip.clear();
     }
+
+
 }
 
 export class Player {
     constructor() {
         this.name = "player";
         this.board = new Gameboard;
+        this.placedShips = [];
     }
 }
 
