@@ -48,8 +48,23 @@ const domHandler = (player, computer) => {
         }
     };
 
+    const resetBoardsInDom = () => {
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                const cellComputer = document.querySelector(
+                    `.computer-board tbody tr:nth-child(${y + 1}) td:nth-child(${x + 2}`
+                );
+                const cellPlayer = document.querySelector(
+                    `.player-board tbody tr:nth-child(${y + 1}) td:nth-child(${x + 2})`
+                );
+                if (cellComputer) cellComputer.classList.remove('ship', 'hit', 'water', 'hiddenShip');
+                if (cellPlayer) cellPlayer.classList.remove('ship', 'hit', 'water', 'hiddenShip');
+            }
+        }
+    }
 
-    return { updateGameboard };
+
+    return { updateGameboard, resetBoardsInDom };
 }
 
 export default domHandler;

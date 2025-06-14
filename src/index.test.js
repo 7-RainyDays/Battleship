@@ -1,5 +1,4 @@
-import { Ship, Gameboard, computerPlayer, Computer } from './classes';
-import { domHandler } from './domAction';
+import { Ship, Gameboard, Computer } from './classes';
 
 describe('ship interaction', () => {
     let ship;
@@ -90,15 +89,15 @@ test('hitting a ship on the board ', () => {
 
 test('game is over', () => {
     const gameboard = new Gameboard();
-    gameboard.tryPlaceShip('A2');
-    gameboard.receiveAttack('A2');
+    gameboard.tryPlaceShip('A1');
+    gameboard.receiveAttack(0, 0);
     expect(gameboard.isGameOver()).toBeTruthy();
 })
 
 test('game is not over', () => {
     const gameboard = new Gameboard();
     gameboard.tryPlaceShip('A1-A2');
-    gameboard.receiveAttack('A2');
+    gameboard.receiveAttack(0, 0);
     expect(gameboard.isGameOver()).toBeFalsy();
 })
 
@@ -138,3 +137,31 @@ describe('computerPlayer', () => {
         expect(computer.getRandomCoords()).toBe(null);
     });
 });
+
+describe('Gameboard resetBoard()', () => {
+    test('should reset all cells to WATER after reset', () => {
+        const board = new Gameboard();
+
+        board.board[0][0] = board.CELL_TYPES.HIT;
+        board.board[1][1] = board.CELL_TYPES.MISS;
+        board.board[2][2] = board.CELL_TYPES.SHIP;
+
+        board.resetBoard();
+
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                expect(board.board[y][x]).toBe(board.CELL_TYPES.WATER);
+            }
+        }
+    });
+
+    test('should clear coordToShip map', () => {
+        const board = new Gameboard();
+        board.coordToShip.set('1,1', { dummy: true });
+
+        board.resetBoard();
+
+        expect(board.coordToShip.size).toBe(0);
+    });
+});
+

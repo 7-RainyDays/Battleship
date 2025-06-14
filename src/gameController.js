@@ -1,4 +1,5 @@
 import { Player, Computer } from "./classes";
+import domHandler from "./domAction";
 
 export default class GameController {
     constructor(player, computer, domHandler) {
@@ -7,6 +8,7 @@ export default class GameController {
         this.dom = domHandler;
 
         this.currentPlayer = 'player';
+        this.gameStarted = false;
         this.gameOver = false;
         this.playerShips = [
             'A1-A2',
@@ -63,6 +65,8 @@ export default class GameController {
     }
 
     handlePlayerMove(y, x) {
+        if (!this.gameStarted) return;
+
         const result = this.computer.board.receiveAttack(y, x); // board[y][x]
         console.log(`Spieler greift an bei [${y}, ${x}]: ${result}`);
         this.dom.updateGameboard(this.computer, false);
@@ -101,6 +105,7 @@ export default class GameController {
         }
         this.dom.updateGameboard(this.player, true);
         this.dom.updateGameboard(this.computer, false);
+        this.gameStarted = true;
     }
 
     checkGameOver(playerObj) {
@@ -113,9 +118,16 @@ export default class GameController {
     }
 
     resetGame() {
-        this.player = new Player;
-        this.computer = new Computer;
+        this.player.board.resetBoard();
+        this.computer.board.resetBoard();
+        this.computer.attackedCoords = [];
+        this.computer.availableMoves = [];
+        this.computer.initializeMoves();
+        this.currentPlayer = 'player';
+        this.gameOver = false;
+        this.dom.resetBoardsInDom();
         this.dom.updateGameboard(this.player, true);
         this.dom.updateGameboard(this.computer, false);
+        this.gameStarted = false;
     }
 }

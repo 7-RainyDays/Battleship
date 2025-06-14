@@ -234,6 +234,15 @@ export class Gameboard {
         };
         return true;
     };
+
+    createEmptyBoard() {
+        return Array.from({ length: 10 }, () => Array(10).fill(this.CELL_TYPES.WATER));
+    }
+
+    resetBoard() {
+        this.board = this.createEmptyBoard();
+        this.coordToShip.clear();
+    }
 }
 
 export class Player {
