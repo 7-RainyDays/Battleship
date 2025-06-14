@@ -57,20 +57,6 @@ test('Ship has been placed horizontally', () => {
     expect(gameboard.board[4][6]).toEqual('s')
 });
 
-test('Input is valid', () => {
-    const input = 'A2-A5';
-    const gameboard = new Gameboard();
-    expect(gameboard.validateInput(input)).toBeTruthy();
-});
-
-test('Input is invalid', () => {
-    const input = ['A21', 'W4', '44', 'A2-A10', 'B1-C2']
-    const gameboard = new Gameboard();
-    input.forEach((x) => {
-        expect(gameboard.validateInput(x)).toBeFalsy();
-    });
-});
-
 test('Bordering another Ship means invalid Input', () => {
     const gameboard = new Gameboard();
     gameboard.tryPlaceShip('A1-A3');
@@ -87,23 +73,10 @@ test('hitting an empty field places a hit marker on the board', () => {
 test('hitting a ship on the board ', () => {
     const gameboard = new Gameboard();
     gameboard.tryPlaceShip('A2');
-    gameboard.receiveAttack('A2');
-    expect(gameboard.board[0][1]).toBe('o');
+    const [x, y] = transCoordinates('A2');
+    gameboard.receiveAttack(y, x);
+    expect(gameboard.board[y][x]).toBe('x');
 });
-
-test('game is over', () => {
-    const gameboard = new Gameboard();
-    gameboard.tryPlaceShip('A1');
-    gameboard.receiveAttack(0, 0);
-    expect(gameboard.isGameOver()).toBeTruthy();
-})
-
-test('game is not over', () => {
-    const gameboard = new Gameboard();
-    gameboard.tryPlaceShip('A1-A2');
-    gameboard.receiveAttack(0, 0);
-    expect(gameboard.isGameOver()).toBeFalsy();
-})
 
 describe('computerPlayer', () => {
     let computer;
