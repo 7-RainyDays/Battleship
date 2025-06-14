@@ -1,11 +1,5 @@
 const domHandler = (player, computer) => {
 
-    const startBtn = document.querySelector('.start-game');
-    startBtn.addEventListener('click', () => playTurn());
-
-    const resetBtn = document.querySelector('.reset-game');
-    resetBtn.addEventListener('click', () => alert('game reseted'));
-
     const playerBoard = document.querySelector('.player-board')
     const computerBoard = document.querySelector('.computer-board')
 

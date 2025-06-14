@@ -1,3 +1,5 @@
+import { Player, Computer } from "./classes";
+
 export default class GameController {
     constructor(player, computer, domHandler) {
         this.player = player;
@@ -6,12 +8,37 @@ export default class GameController {
 
         this.currentPlayer = 'player';
         this.gameOver = false;
+        this.playerShips = [
+            'A1-A2',
+            'B6-B9',
+            'C5',
+            'G1-G4',
+            'D10-E10',
+            'J10',
+            'E8-G8',
+            'J1-J4',
+        ];
+
+        this.computerShips = [
+            'A1-A2',
+            'B6-B9',
+            'C5',
+            'G1-G4',
+            'D10-E10',
+            'J10',
+            'E8-G8',
+            'J1-J4',
+        ]
 
         this.initEventListeners();
     }
 
     initEventListeners() {
+        const startBtn = document.querySelector('.start-game');
+        const resetBtn = document.querySelector('.reset-game');
         const computerBoard = document.querySelector('.computer-board');
+        startBtn.addEventListener('click', () => this.placeShips());
+        resetBtn.addEventListener('click', () => this.resetGame());
 
         computerBoard.addEventListener('click', (e) => {
             if (this.gameOver || this.currentPlayer !== 'player') return;
@@ -53,7 +80,7 @@ export default class GameController {
     }
 
     handleComputerMove() {
-        const [x, y] = this.computer.getRandomCoords(); // [x, y] in DOM → board[y][x]
+        const [x, y] = this.computer.getRandomCoords();
         this.player.board.receiveAttack(y, x);
         this.dom.updateGameboard(this.player, true);
 
@@ -65,6 +92,17 @@ export default class GameController {
         this.currentPlayer = 'player';
     }
 
+    placeShips() {
+        for (const ship of this.playerShips) {
+            this.player.board.tryPlaceShip(ship);
+        }
+        for (const ship of this.computerShips) {
+            this.computer.board.tryPlaceShip(ship);
+        }
+        this.dom.updateGameboard(this.player, true);
+        this.dom.updateGameboard(this.computer, false);
+    }
+
     checkGameOver(playerObj) {
         return playerObj.board.allShipsSunk();
     }
@@ -72,5 +110,12 @@ export default class GameController {
     endGame(winner) {
         this.gameOver = true;
         alert(`${winner} hat gewonnen!`);
+    }
+
+    resetGame() {
+        this.player = new Player;
+        this.computer = new Computer;
+        this.dom.updateGameboard(this.player, true);
+        this.dom.updateGameboard(this.computer, false);
     }
 }
