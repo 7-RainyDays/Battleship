@@ -1,6 +1,3 @@
-import { Player, Computer } from "./classes";
-import domHandler from "./domAction";
-
 export default class GameController {
     constructor(player, computer, domHandler) {
         this.player = player;

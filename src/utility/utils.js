@@ -29,3 +29,14 @@ export function validateInput(str) {
     const [x, y] = transCoordinates(str);
     return x >= 0 && x < 10 && y >= 0 && y < 10;
 };
+
+export function coordsToNotation(coords) {
+    //translate coords e.g. [1,1] to [B2]
+    const toAlpha = (y) => LETTERS[y];       // 0 → A
+    const toNum = (x) => (x + 1).toString(); // 0 → 1
+
+    const start = coords[0];
+    const end = coords[coords.length - 1];
+
+    return `${toAlpha(start[1])}${toNum(start[0])}-${toAlpha(end[1])}${toNum(end[0])}`;
+}

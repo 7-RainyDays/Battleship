@@ -1,25 +1,7 @@
-import { transCoordinates, validateInput } from "./utils";
+import { transCoordinates, validateInput, coordsToNotation } from "../utility/utils";
+import Ship from "./ship";
 
-export class Ship {
-    constructor(len) {
-
-        this.len = len;
-        this.hitCount = 0;
-        this.sunk = false;
-    };
-
-    hit() {
-        this.hitCount += 1;
-        this.isSunk();
-    };
-
-    isSunk() {
-        return this.hitCount >= this.len;
-    };
-};
-
-
-export class Gameboard {
+export default class Gameboard {
     constructor() {
         this.board = [
             ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
@@ -83,7 +65,7 @@ export class Gameboard {
 
     tryPlaceShip(str) {
         //driver script to place a ship
-        if (!this.validateInput(str)) return false;
+        if (!validateInput(str)) return false;
 
         const coords = this.getPlacementCoordinates(str);
         if (!this.areCoordsFree(coords)) return false;
@@ -118,13 +100,13 @@ export class Gameboard {
         //returns all coordinates for a ship placement in a 2-Dimensional Array e.g. [[0,1],[0,2],[0,3]]
         // Single cell, e.g. "C10"
         if (!str.includes("-")) {
-            const [x, y] = this.transCoordinates(str);
+            const [x, y] = transCoordinates(str);
             return [[x, y]];
         }
         // Range input, e.g. "C5-C8"
         const [from, to] = str.split("-");
-        const [x1, y1] = this.transCoordinates(from);
-        const [x2, y2] = this.transCoordinates(to);
+        const [x1, y1] = transCoordinates(from);
+        const [x2, y2] = transCoordinates(to);
 
         if (x1 === x2) {
             const affectedCoordinates = this.getAllAffectedCoordinates(y1, y2);
@@ -184,14 +166,14 @@ export class Gameboard {
     placeShipOnBoard(str) {
         //check if ship has length 1
         if (str.split("-").length === 1) {
-            const [x, y] = this.transCoordinates(str);
+            const [x, y] = transCoordinates(str);
             this.board[x][y] = this.CELL_TYPES.SHIP;
             return;
         };
 
         const line = str.split("-");
-        const [x1, y1] = this.transCoordinates(line[0]);
-        const [x2, y2] = this.transCoordinates(line[1]);
+        const [x1, y1] = transCoordinates(line[0]);
+        const [x2, y2] = transCoordinates(line[1]);
 
         if (x1 === x2) {
             //horizontal ship
@@ -253,48 +235,5 @@ export class Gameboard {
     resetBoard() {
         this.board = this.createEmptyBoard();
         this.coordToShip.clear();
-    }
-
-
-}
-
-export class Player {
-    constructor() {
-        this.name = "player";
-        this.board = new Gameboard;
-        this.placedShips = [];
-    }
-}
-
-export class Computer extends Player {
-    constructor() {
-        super();
-        this.name = "computer"
-        this.attackedCoords = [];
-        this.availableMoves = [];
-        this.initializeMoves();
-    }
-
-    initializeMoves() {
-        for (let x = 0; x < 10; x++) {
-            for (let y = 0; y < 10; y++) {
-                this.availableMoves.push(`${x},${y}`);
-            }
-        }
-    }
-
-    getRandomCoords() {
-        if (this.availableMoves.length === 0) return null;
-        const item = this.availableMoves[Math.floor(Math.random() * this.availableMoves.length)];
-        this.attackedCoords.push(item);
-        const index = this.availableMoves.indexOf(item);
-        this.availableMoves.splice(index, 1);
-        return item.split(',').map(Number);
-    }
-
-    randomAttack(player) {
-        const [x, y] = this.getRandomCoords();
-        console.log(x, y);
-        player.board.receiveAttack(x, y);
     }
 }

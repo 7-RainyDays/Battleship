@@ -24,7 +24,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html',
+            template: './index.html',
             title: 'Battleship',
             filename: 'index.html',
             inject: 'body'
@@ -35,7 +35,7 @@ module.exports = {
             directory: path.join(__dirname, 'public'),
         },
         watchFiles: {
-            paths: ['src/index.html', 'src/index.js', 'src/style.css', 'src/domAction.js', 'src/classes.js'],
+            paths: ['./index.html', './src/index.js', './src/style.css', './src/domAction.js', 'src/classes/*'],
             options: {
                 usePolling: false,
             },

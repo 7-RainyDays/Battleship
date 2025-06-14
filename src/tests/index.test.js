@@ -1,4 +1,8 @@
-import { Ship, Gameboard, Computer } from './classes';
+import Computer from '../classes/computer.js';
+import Ship from '../classes/ship.js';
+import Gameboard from '../classes/gameboard.js';
+import { transCoordinates, validateInput, coordsToNotation } from "../utility/utils";
+
 
 describe('ship interaction', () => {
     let ship;
@@ -29,7 +33,7 @@ describe('ship interaction', () => {
 
 test('Gameboard translates inserted coordinates to numeric values', () => {
     const gameboard = new Gameboard();
-    expect(gameboard.transCoordinates('A1')).toEqual([0, 0]);
+    expect(transCoordinates('A1')).toEqual([0, 0]);
 });
 
 
