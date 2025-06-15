@@ -91,3 +91,19 @@ button:hover {
     background-color: red;
     border-collapse: collapse;
 }
+
+.first-color {
+    background: #ececec;
+}
+
+.second-color {
+    background: #8beaff;
+}
+
+.third-color {
+    background: #385170;
+}
+
+.fourth-color {
+    background: #142d4c;
+}
