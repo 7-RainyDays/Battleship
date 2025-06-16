@@ -7,18 +7,8 @@ export default class GameController {
         this.currentPlayer = 'player';
         this.gameStarted = false;
         this.gameOver = false;
-        this.playerShips = [
-            'A1-A2',
-            'B6-B9',
-            'C5',
-            'G1-G4',
-            'D10-E10',
-            'J10',
-            'E8-G8',
-            'J1-J4',
-        ];
-
-        this.computerShips = this.computer.board.createRandomShipPlacement()
+        this.playerShips = [];
+        this.computerShips = this.computer.createRandomShipPlacement();
 
         this.initEventListeners();
     }
@@ -26,9 +16,11 @@ export default class GameController {
     initEventListeners() {
         const startBtn = document.querySelector('.start-game');
         const resetBtn = document.querySelector('.reset-game');
+        const randomBtn = document.querySelector('.random-position')
         const computerBoard = document.querySelector('.computer-board');
         startBtn.addEventListener('click', () => this.placeShips());
         resetBtn.addEventListener('click', () => this.resetGame());
+        randomBtn.addEventListener('click', () => this.randomizePlayerBoard());
 
         computerBoard.addEventListener('click', (e) => {
             if (this.gameOver || this.currentPlayer !== 'player') return;
@@ -88,12 +80,12 @@ export default class GameController {
         for (const ship of this.playerShips) {
             this.player.board.tryPlaceShip(ship);
         }
-        console.log(this.computerShips)
         for (const ship of this.computerShips) {
             this.computer.board.tryPlaceShip(ship);
         }
         this.dom.updateGameboard(this.player, true);
         this.dom.updateGameboard(this.computer, true);
+        console.table(this.computer.board.board);
         this.gameStarted = true;
     }
 
@@ -106,17 +98,27 @@ export default class GameController {
         alert(`${winner} hat gewonnen!`);
     }
 
+    randomizePlayerBoard() {
+        if (this.gameStarted) return;
+        this.player.board.resetBoard();
+        this.dom.resetBoardsInDom();
+        this.player.placedShips = this.player.createRandomShipPlacement();
+        this.dom.updateGameboard(this.player, true);
+    }
+
     resetGame() {
+        this.gameStarted = false;
+        this.gameOver = false;
         this.player.board.resetBoard();
         this.computer.board.resetBoard();
         this.computer.attackedCoords = [];
         this.computer.availableMoves = [];
         this.computer.initializeMoves();
+        this.computerShips = [];
+        this.computerShips = this.computer.createRandomShipPlacement();
         this.currentPlayer = 'player';
-        this.gameOver = false;
         this.dom.resetBoardsInDom();
         this.dom.updateGameboard(this.player, true);
-        this.dom.updateGameboard(this.computer, false);
-        this.gameStarted = false;
+        this.dom.updateGameboard(this.computer, true);
     }
 }

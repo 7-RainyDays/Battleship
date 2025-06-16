@@ -22,12 +22,7 @@ export default class Gameboard {
             MISS: 'x',
             WATER: '-'
         };
-        this.availableShips = {
-            "one": 4,
-            "two": 3,
-            "three": 2,
-            "four": 1
-        };
+
         this.playerShips = [
             'A1-A2',
             'B6-B9',
@@ -39,45 +34,6 @@ export default class Gameboard {
             'J1-J4',
         ];
     };
-
-    //create random coordinates for ships on the board
-    createRandomShipPlacement() {
-        const computerShips = [];
-        for (const [key, value] of Object.entries(this.availableShips)) {
-            for (let i = 0; i < value; i++) {
-                let placed = false;
-                while (!placed) {
-                    const startX = getRandomInt(10);
-                    const startY = getRandomInt(10);
-                    const isHorizontal = Math.random() < 0.5;
-
-                    const coords = this.createShipRange(startX, startY, value, isHorizontal);
-                    if (!coords) continue;
-
-                    const notation = coordsToNotation(coords);
-                    if (this.tryPlaceShip(notation)) {
-                        placed = true;
-                        computerShips.push(notation)
-                    }
-                }
-            }
-        }
-        return computerShips;
-    }
-
-    createShipRange(startX, startY, length, isHorizontal) {
-        const coords = [];
-
-        for (let i = 0; i < length; i++) {
-            const x = isHorizontal ? startX + i : startX;
-            const y = isHorizontal ? startY : startY + i;
-
-            if (x >= 10 || y >= 10) return null;
-            coords.push([x, y]);
-        }
-
-        return coords;
-    }
 
     tryPlaceShip(str) {
         //driver script to place a ship
@@ -152,7 +108,7 @@ export default class Gameboard {
         for (const [x, y] of coords) {
             for (const [dx, dy] of offsets) {
                 const nx = x + dx;
-                const ny = y + dx;
+                const ny = y + dy;
                 const key = `${nx},${ny}`;
                 if (this.isWithinBoard([nx, ny])) {
                     surrounding.push([nx, ny]);
@@ -169,7 +125,6 @@ export default class Gameboard {
                 unique.push(coord);
             }
         }
-
         return unique;
     }
 

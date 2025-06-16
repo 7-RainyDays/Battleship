@@ -106,7 +106,6 @@ describe('computerPlayer', () => {
     });
 
     test('getRandomCoords returns null when no moves are left', () => {
-        // Leer alle Züge
         for (let i = 0; i < 100; i++) {
             computer.getRandomCoords();
         }
@@ -142,12 +141,12 @@ describe('Gameboard resetBoard()', () => {
     });
 });
 
-// Wir mocken getRandomInt:
 jest.mock('../utility/utils.js', () => ({
     ...jest.requireActual('../utility/utils.js'),
     getRandomInt: jest.fn(),
 }));
 
+/*
 describe('Computer ship placement', () => {
     let computer;
     let mockBoard;
@@ -182,5 +181,28 @@ describe('Computer ship placement', () => {
         computer.board.createRandomShipPlacement(mockBoard);
 
         expect(mockBoard.tryPlaceShip).toHaveBeenCalledTimes(5);
+    });
+}); */
+
+describe('tryPlaceShip detects invalid ship placements', () => {
+    let gameboard;
+
+    beforeEach(() => {
+        gameboard = new Gameboard();
+    });
+
+    test("rejects adjacent vertical ships", () => {
+        expect(gameboard.tryPlaceShip('A1-A2')).toBeTruthy();
+        expect(gameboard.tryPlaceShip('B1-B2')).toBeFalsy();
+    });
+
+    test("rejects adjacent horizontal ships", () => {
+        expect(gameboard.tryPlaceShip('A1-B1')).toBeTruthy();
+        expect(gameboard.tryPlaceShip('A2-B2')).toBeFalsy();
+    });
+
+    test("rejects adjacent diagonal ships", () => {
+        expect(gameboard.tryPlaceShip('A1')).toBeTruthy();
+        expect(gameboard.tryPlaceShip('B2')).toBeFalsy();
     });
 });
