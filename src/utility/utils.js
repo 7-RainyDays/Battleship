@@ -1,7 +1,8 @@
+const LETTERS = 'ABCDEFGHIJ';
+
 export function transCoordinates(str) {
     //translates the input string to match the gameboard index format;
-    const al = 'ABCDEFGHIJ';
-    const x = al.indexOf(str.charAt(0).toUpperCase());
+    const x = LETTERS.indexOf(str.charAt(0).toUpperCase());
     const y = parseInt(str.slice(1)) - 1;
     return [x, y];
 }
@@ -39,4 +40,8 @@ export function coordsToNotation(coords) {
     const end = coords[coords.length - 1];
 
     return `${toAlpha(start[1])}${toNum(start[0])}-${toAlpha(end[1])}${toNum(end[0])}`;
+}
+
+export function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }

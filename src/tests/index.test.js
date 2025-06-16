@@ -142,3 +142,45 @@ describe('Gameboard resetBoard()', () => {
     });
 });
 
+// Wir mocken getRandomInt:
+jest.mock('../utility/utils.js', () => ({
+    ...jest.requireActual('../utility/utils.js'),
+    getRandomInt: jest.fn(),
+}));
+
+describe('Computer ship placement', () => {
+    let computer;
+    let mockBoard;
+
+    beforeEach(() => {
+        computer = new Computer();
+        mockBoard = {
+            tryPlaceShip: jest.fn().mockReturnValue(true),
+        };
+    });
+
+    test('calls tryPlaceShip for each ship type with valid notation', () => {
+        const randomValues = [0, 0, 1, 1, 2, 2, 3, 3];
+        let callCount = 0;
+        require('../utility/utils.js').getRandomInt.mockImplementation(() => randomValues[callCount++]);
+
+        computer.board.createRandomShipPlacement(mockBoard);
+
+        expect(mockBoard.tryPlaceShip).toHaveBeenCalled();
+        expect(mockBoard.tryPlaceShip).toHaveBeenCalledWith(expect.stringMatching(/^[A-J]([1-9]|10)-[A-J]([1-9]|10)$/));
+        expect(mockBoard.tryPlaceShip).toHaveBeenCalledTimes(4);
+    });
+
+    test('retries placement if tryPlaceShip returns false', () => {
+        let callCount = 0;
+        require('../utility/utils.js').getRandomInt.mockReturnValue(0);
+
+        mockBoard.tryPlaceShip.mockImplementation(() => {
+            return callCount++ === 1;
+        });
+
+        computer.board.createRandomShipPlacement(mockBoard);
+
+        expect(mockBoard.tryPlaceShip).toHaveBeenCalledTimes(5);
+    });
+});

@@ -18,16 +18,7 @@ export default class GameController {
             'J1-J4',
         ];
 
-        this.computerShips = [
-            'A1-A2',
-            'B6-B9',
-            'C5',
-            'G1-G4',
-            'D10-E10',
-            'J10',
-            'E8-G8',
-            'J1-J4',
-        ]
+        this.computerShips = this.computer.board.createRandomShipPlacement()
 
         this.initEventListeners();
     }
@@ -97,11 +88,12 @@ export default class GameController {
         for (const ship of this.playerShips) {
             this.player.board.tryPlaceShip(ship);
         }
+        console.log(this.computerShips)
         for (const ship of this.computerShips) {
             this.computer.board.tryPlaceShip(ship);
         }
         this.dom.updateGameboard(this.player, true);
-        this.dom.updateGameboard(this.computer, false);
+        this.dom.updateGameboard(this.computer, true);
         this.gameStarted = true;
     }
 

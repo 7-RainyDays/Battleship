@@ -1,4 +1,4 @@
-import { transCoordinates, validateInput, coordsToNotation } from "../utility/utils";
+import { transCoordinates, validateInput, coordsToNotation, getRandomInt } from "../utility/utils";
 import Ship from "./ship";
 
 export default class Gameboard {
@@ -42,25 +42,41 @@ export default class Gameboard {
 
     //create random coordinates for ships on the board
     createRandomShipPlacement() {
+        const computerShips = [];
         for (const [key, value] of Object.entries(this.availableShips)) {
-            const startX = getRandomInt(10);
-            const startY = getRandomInt(10);
-            if (value === 1) {
-                this.availableShips.push([startX, startY]);
-                continue;
-            };
-            //create vertical or horizontal placed ship 
-            const coinFlip = Math.floor(Math.random() * 2);
-            if (coinFlip === 0) {
-                const rangeX = this.createShipRange(startX, value);
-            } else {
-                const rangeY = this.createShipRange(startY, value);
+            for (let i = 0; i < value; i++) {
+                let placed = false;
+                while (!placed) {
+                    const startX = getRandomInt(10);
+                    const startY = getRandomInt(10);
+                    const isHorizontal = Math.random() < 0.5;
+
+                    const coords = this.createShipRange(startX, startY, value, isHorizontal);
+                    if (!coords) continue;
+
+                    const notation = coordsToNotation(coords);
+                    if (this.tryPlaceShip(notation)) {
+                        placed = true;
+                        computerShips.push(notation)
+                    }
+                }
             }
         }
+        return computerShips;
     }
 
-    createShipRange() {
-        return;
+    createShipRange(startX, startY, length, isHorizontal) {
+        const coords = [];
+
+        for (let i = 0; i < length; i++) {
+            const x = isHorizontal ? startX + i : startX;
+            const y = isHorizontal ? startY : startY + i;
+
+            if (x >= 10 || y >= 10) return null;
+            coords.push([x, y]);
+        }
+
+        return coords;
     }
 
     tryPlaceShip(str) {
