@@ -84,7 +84,7 @@ export default class GameController {
             this.computer.board.tryPlaceShip(ship);
         }
         this.dom.updateGameboard(this.player, true);
-        this.dom.updateGameboard(this.computer, true);
+        this.dom.updateGameboard(this.computer, false);
         console.table(this.computer.board.board);
         this.gameStarted = true;
     }
@@ -116,9 +116,10 @@ export default class GameController {
         this.computer.initializeMoves();
         this.computerShips = [];
         this.computerShips = this.computer.createRandomShipPlacement();
+        this.playerShips = this.player.createRandomShipPlacement();
         this.currentPlayer = 'player';
         this.dom.resetBoardsInDom();
         this.dom.updateGameboard(this.player, true);
-        this.dom.updateGameboard(this.computer, true);
+        this.dom.updateGameboard(this.computer, false);
     }
 }

@@ -13,4 +13,5 @@ const dom = domHandler(player, computer);
 document.addEventListener('DOMContentLoaded', () => {
 
     const gameState = new GameController(player, computer, dom);
+    gameState.randomizePlayerBoard();
 });

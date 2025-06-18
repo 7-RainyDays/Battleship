@@ -112,27 +112,14 @@ button:hover {
 }
 
 .water {
+
     background-color: #8de8fc;
     border-collapse: collapse;
+    transition: background-color 400ms ease;
 }
 
 .hit {
     background-color: red;
     border-collapse: collapse;
-}
-
-.first-color {
-    background: #ececec;
-}
-
-.second-color {
-    background: #8de8fc;
-}
-
-.third-color {
-    background: #385170;
-}
-
-.fourth-color {
-    background: #142d4c;
+    transition: background-color 400ms ease;
 }
