@@ -9,6 +9,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].bundle.js',
+        publicPath: '',
     },
     module: {
         rules: [
@@ -35,7 +36,7 @@ module.exports = {
             directory: path.join(__dirname, 'public'),
         },
         watchFiles: {
-            paths: ['./index.html', './src/index.js', './src/style.css', './src/domAction.js', 'src/classes/*'],
+            paths: ['./index.html', './src/index.js', './src/style.css', './src/domAction.js', 'src/classes/*', './src/gameController.js', './utility/utils.js'],
             options: {
                 usePolling: false,
             },
